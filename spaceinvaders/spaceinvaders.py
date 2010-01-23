@@ -1,9 +1,12 @@
 # spaceinvaders.py
 import pyglet
-
 import player
+from pyglet.window import key
 
 window = pyglet.window.Window()
+
+keys = pyglet.window.key.KeyStateHandler()
+window.push_handlers(keys)
 
 player_image = pyglet.resource.image('player.png')
 player = player.Player( player_image, 320, 200)
@@ -14,7 +17,11 @@ def on_draw():
     player.draw()
 
 def update(dt):
-    pass
+    # check player movement
+    if keys[key.LEFT]:
+        print("Left")
+    if keys[key.RIGHT]:
+        print("Right")
 
 pyglet.clock.schedule_interval(update, 1 / 30.0)
 
