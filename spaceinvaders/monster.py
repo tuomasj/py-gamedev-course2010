@@ -1,6 +1,10 @@
 # monster.py
 import pyglet
 
+RIGHT = 0
+LEFT = 1
+DOWN = 2
+
 class Monster(pyglet.sprite.Sprite):
     pass
 
@@ -16,12 +20,28 @@ class MonsterContainer():
 
         self.width = 36 * cols
         self.height = 36 * rows
+        self.x = 0
+        self.y = 0
+        self.direction = RIGHT
 
     def draw(self):
         for monster in self.monsters:
             monster.draw()
 
-    def update(self, dt):
+    def move(self, dir_x, dir_y):
+        self.x += dir_x
+        self.y += dir_y
         for monster in self.monsters:
-            monster.x += 5 * dt
+            monster.x += dir_x
+            monster.y += dir_y
+            
+
+    def update(self, dt):
+        if self.direction == RIGHT:
+            self.move(10 * dt, 0)
+            # if container hits right border
+            if self.x > (640 - self.width):
+                self.direction = DOWN
+                return
+        
     
