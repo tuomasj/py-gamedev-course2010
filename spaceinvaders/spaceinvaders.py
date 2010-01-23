@@ -14,7 +14,7 @@ monsters = monster.MonsterContainer(10,5)
 # player_image = pyglet.resource.image('player.png')
 player_image = pyglet.image.load('player.png')
 
-player = player.Player( player_image, 320, 200)
+player = player.Player( player_image, 320, 10)
 
 @window.event
 def on_draw():
@@ -28,6 +28,8 @@ def update(dt):
         player.move_left(dt)
     if keys[key.RIGHT]:
         player.move_right(dt)
+
+    monsters.update( dt )
 
 pyglet.clock.schedule_interval(update, 1 / 30.0)
 
