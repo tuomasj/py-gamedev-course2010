@@ -9,18 +9,18 @@ window = pyglet.window.Window()
 keys = pyglet.window.key.KeyStateHandler()
 window.push_handlers(keys)
 
+monsters = monster.MonsterContainer(10,5)
+
 # player_image = pyglet.resource.image('player.png')
 player_image = pyglet.image.load('player.png')
-monster_image = pyglet.image.load('monster.png')
 
-monster = monster.Monster( monster_image, 30,350 )
 player = player.Player( player_image, 320, 200)
 
 @window.event
 def on_draw():
     window.clear()
     player.draw()
-    monster.draw()
+    monsters.draw()
 
 def update(dt):
     # check player movement
