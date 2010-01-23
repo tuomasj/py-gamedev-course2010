@@ -19,9 +19,9 @@ def on_draw():
 def update(dt):
     # check player movement
     if keys[key.LEFT]:
-        print("Left")
+        player.move_left(dt)
     if keys[key.RIGHT]:
-        print("Right")
+        player.move_right(dt)
 
 pyglet.clock.schedule_interval(update, 1 / 30.0)
 
