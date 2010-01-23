@@ -1,23 +1,26 @@
 # spaceinvaders.py
 import pyglet
 import player
+import monster
 from pyglet.window import key
 
 window = pyglet.window.Window()
 
 keys = pyglet.window.key.KeyStateHandler()
 window.push_handlers(keys)
-print("script home:" + pyglet.resource.get_script_home() )
 
 # player_image = pyglet.resource.image('player.png')
 player_image = pyglet.image.load('player.png')
-player = player.Player( player_image, 320, 200)
+monster_image = pyglet.image.load('monster.png')
 
+monster = monster.Monster( monster_image, 30,350 )
+player = player.Player( player_image, 320, 200)
 
 @window.event
 def on_draw():
     window.clear()
     player.draw()
+    monster.draw()
 
 def update(dt):
     # check player movement
