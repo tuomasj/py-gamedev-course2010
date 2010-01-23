@@ -5,6 +5,8 @@ RIGHT = 0
 LEFT = 1
 DOWN = 2
 
+MONSTER_SPEED = 20
+
 class Monster(pyglet.sprite.Sprite):
     pass
 
@@ -20,9 +22,11 @@ class MonsterContainer():
 
         self.width = 36 * cols
         self.height = 36 * rows
+        self.movement_distance = 0
         self.x = 0
         self.y = 0
         self.direction = RIGHT
+        self.next_direction = RIGHT
 
     def draw(self):
         for monster in self.monsters:
@@ -37,11 +41,29 @@ class MonsterContainer():
             
 
     def update(self, dt):
+        
         if self.direction == RIGHT:
-            self.move(10 * dt, 0)
+            # change only x-coordinate
+            self.move(MONSTER_SPEED * dt, 0)
             # if container hits right border
             if self.x > (640 - self.width):
                 self.direction = DOWN
+                self.movement_distance = self.y - 50
+                self.next_direction = LEFT
                 return
-        
+        if self.direction == DOWN:
+            # change only y-coordinate
+            self.move(0, -MONSTER_SPEED * dt)
+            if self.y < self.movement_distance:
+                self.direction = self.next_direction
+                return
+        if self.direction == LEFT:
+            # change only x-coordinate
+            self.move(-MONSTER_SPEED * dt, 0)
+            # if container hits left border
+            if self.x < 0:
+                self.direction = DOWN
+                self.movement_distance = self.y - 50
+                self.next_direction = RIGHT
+                return
     
