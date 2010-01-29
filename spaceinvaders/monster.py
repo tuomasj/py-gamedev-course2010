@@ -8,7 +8,12 @@ DOWN = 2
 MONSTER_SPEED = 20
 
 class Monster(pyglet.sprite.Sprite):
-    pass
+    def __init__(self, image, x, y):
+        pyglet.sprite.Sprite.__init__(self, image, x, y)
+        self.active = True
+
+    def deactivate(self):
+        self.active = False
 
 class MonsterContainer():
     def __init__(self, cols, rows):
@@ -30,7 +35,9 @@ class MonsterContainer():
 
     def draw(self):
         for monster in self.monsters:
-            monster.draw()
+            # if monster is alive, draw it
+            if monster.active:
+                monster.draw()
 
     def move(self, dir_x, dir_y):
         self.x += dir_x
@@ -38,10 +45,8 @@ class MonsterContainer():
         for monster in self.monsters:
             monster.x += dir_x
             monster.y += dir_y
-            
 
     def update(self, dt):
-        
         if self.direction == RIGHT:
             # change only x-coordinate
             self.move(MONSTER_SPEED * dt, 0)
@@ -66,4 +71,3 @@ class MonsterContainer():
                 self.movement_distance = self.y - 50
                 self.next_direction = RIGHT
                 return
-    

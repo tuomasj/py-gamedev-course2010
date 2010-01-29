@@ -26,3 +26,6 @@ class Bullet():
         if self.active:
             self.sprite.draw()
 
+    def deactivate(self):
+        self.active = False
+

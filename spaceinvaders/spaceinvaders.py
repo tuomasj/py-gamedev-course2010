@@ -4,6 +4,7 @@ import pyglet
 import player
 import monster
 import bullet
+import collision
 
 from pyglet.window import key
 
@@ -28,6 +29,20 @@ def on_draw():
     player.draw()
     monsters.draw()
 
+def check_collisions(source, objects):
+    # if bullet is active
+    if source.active:
+        # go through all monsters
+        for obj in objects:
+            # check if bullet hits active monster
+            if obj.active and collision.check_collision(source.sprite, obj):
+                # deactivate monster and bullet
+                obj.deactivate()
+                source.deactivate()
+                # massive explosion...
+                # explosion.create(obj.x, obj.y)
+                return
+
 def update(dt):
     # check player movement
     if keys[key.LEFT]:
@@ -44,6 +59,9 @@ def update(dt):
 
     # move laser
     laser.update(dt)
+
+    # check collisions between laser and monsters
+    check_collisions(laser, monsters.monsters)
 
 
 pyglet.clock.schedule_interval(update, 1 / 30.0)
