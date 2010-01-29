@@ -24,6 +24,7 @@ laser = bullet.Bullet()
 @window.event
 def on_draw():
     window.clear()
+    laser.draw()
     player.draw()
     monsters.draw()
 
