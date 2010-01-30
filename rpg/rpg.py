@@ -11,8 +11,6 @@ window.push_handlers(keys)
 sm = statemachine.StateMachine()
 sm.push( states.StartGameState() )
 
-
-
 @window.event
 def on_draw():
     window.clear()
