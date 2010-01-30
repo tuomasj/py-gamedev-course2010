@@ -103,10 +103,12 @@ class GameState(statemachine.AbstractState):
         for monster in self.monsters:
             if collision.check_collision(self.player, monster):
                 self.sm.change_state( states.GameoverState() )
+                return
 
         # is level end reached?
         if collision.check_collision(self.player, self.goal):
             self.sm.change_state( game.LevelCompletedState() )
+            return
 
     def update_player(self, dt, keys):
         old_x = self.player.x
