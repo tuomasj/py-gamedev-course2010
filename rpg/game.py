@@ -22,15 +22,37 @@ class Player(pyglet.sprite.Sprite):
         return False
 
 class TinyMonster(Player):
-    def update(self, dt):
-        dir = random.randint(0,4)
-        if dir == 0:
-            # left
-            self.translate( -10 * dt, 0)
-        if dir == 1:
-            # right
-            self.translate( 10 * dt, 0)
 
+    def __init__(self, image, x, y):
+        Player.__init__(self, image, x, y)
+        self.randomize_direction()
+        self.speed = 50.0
+
+    def update(self, dt, tiles):
+        self.move_monster(dt, tiles)
+
+    def randomize_direction(self):
+        self.direction = random.randint(0,3)
+
+    def move_monster(self, dt, tiles):
+        old_x = self.x
+        old_y = self.y
+        if self.direction == 0:
+            # left
+            self.translate( -self.speed * dt, 0)
+        if self.direction == 1:
+            # right
+            self.translate( self.speed * dt, 0)
+        if self.direction == 2:
+            # up
+            self.translate( 0, self.speed * dt)
+        if self.direction == 3:
+            # down
+            self.translate( 0, -self.speed * dt)
+        if self.check_collision( tiles ):
+            self.x = old_x
+            self.y = old_y
+            self.randomize_direction()
 
 class GameState(statemachine.AbstractState):
     def start(self, sm):
@@ -47,7 +69,7 @@ class GameState(statemachine.AbstractState):
         del( self.layer )
 
     def update(self, dt, keys):
-        self.monster.update(dt)
+        self.monster.update(dt, self.layer.tiles)
         self.update_player(dt, keys)
 
     def update_player(self, dt, keys):
