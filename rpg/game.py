@@ -27,12 +27,18 @@ class TinyMonster(Player):
         Player.__init__(self, image, x, y)
         self.randomize_direction()
         self.speed = 50.0
+        self.timer = 0
 
     def update(self, dt, tiles):
-        self.move_monster(dt, tiles)
+        self.timer -= dt
+        if self.timer < 0:
+            self.randomize_direction()
+        else:
+            self.move_monster(dt, tiles)
 
     def randomize_direction(self):
         self.direction = random.randint(0,3)
+        self.timer = random.random() + 0.5
 
     def move_monster(self, dt, tiles):
         old_x = self.x
