@@ -2,6 +2,7 @@
 
 import statemachine
 import pyglet
+from pyglet.window import key
 
 class StartGameState(statemachine.AbstractState):
     def start(self, statemachine):
@@ -14,8 +15,9 @@ class StartGameState(statemachine.AbstractState):
     def stop(self):
         del(self.label)
 
-    def update(self, deltaTime):
-        pass
+    def update(self, deltaTime, keys):
+        if keys[key.SPACE]:
+            print "Space!"
 
     def draw(self):
         self.label.draw()

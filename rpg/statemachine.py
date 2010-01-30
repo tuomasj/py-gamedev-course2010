@@ -8,7 +8,7 @@ class AbstractState():
     def stop(self):
         pass
 
-    def update(self, dt):
+    def update(self, dt, keys):
         pass
 
     def draw(self):
@@ -23,12 +23,12 @@ class StateMachine():
     def __del__(self):
         self.stop_all_states()
 
-    def update(self, dt):
-        if self.current_state:
-            self.current_state.update(dt)
+    def update(self, dt, keys):
+        if self.current_state != None:
+            self.current_state.update(dt, keys)
 
     def draw(self):
-        if self.current_state:
+        if self.current_state != None:
             self.current_state.draw()
 
     def change_state(self, new_state):

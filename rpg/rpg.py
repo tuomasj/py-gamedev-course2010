@@ -4,9 +4,14 @@ import statemachine
 import states
 
 window = pyglet.window.Window()
-sm = statemachine.StateMachine()
 
+keys = pyglet.window.key.KeyStateHandler()
+window.push_handlers(keys)
+
+sm = statemachine.StateMachine()
 sm.push( states.StartGameState() )
+
+
 
 @window.event
 def on_draw():
@@ -14,7 +19,7 @@ def on_draw():
     sm.draw()
 
 def update(deltaTime):
-    sm.update(deltaTime)
+    sm.update(deltaTime, keys)
 
 pyglet.clock.schedule_interval( update, 1 / 30.0 )
 pyglet.app.run()
