@@ -25,12 +25,16 @@ class TileLayer():
         cols = tile_image.width / tile_width
         rows = tile_image.height / tile_height
 
-        tile_sequence = pyglet.image.ImageGrid( tile_region, rows, cols, tile_width, tile_height)
+        tile_sequence = pyglet.image.ImageGrid( tile_region, rows, cols, tile_width, tile_height).get_texture_sequence()
+
+        max_tiles = len(tile_sequence) - 1
 
         # generate sprites for each tile
         for y in range(map_height):
             for x in range(map_width):
-                tile = self.map[ y * map_width + x]
+                # compensate flipped y-coordinate and get tile index
+                tile = max_tiles - self.map[ y * map_width + x]
+                # create sprite using one of the tile sequence images
                 sprite = pyglet.sprite.Sprite( tile_sequence[tile], x*32, y*32)
                 self.tiles.append( sprite )
 
