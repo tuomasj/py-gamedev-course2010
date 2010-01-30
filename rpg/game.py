@@ -5,6 +5,7 @@ import tilelayer
 import pyglet
 import collision
 from pyglet.window import key
+import random
 
 PLAYER_SPEED = 70.0
 
@@ -13,6 +14,23 @@ class Player(pyglet.sprite.Sprite):
     def translate(self, dx, dy):
         self.x += dx
         self.y += dy
+
+    def check_collision(self, objs):
+        for obj in objs:
+            if collision.check_collision(self, obj):
+                return True
+        return False
+
+class TinyMonster(Player):
+    def update(self, dt):
+        dir = random.randint(0,4)
+        if dir == 0:
+            # left
+            self.translate( -10 * dt, 0)
+        if dir == 1:
+            # right
+            self.translate( 10 * dt, 0)
+
 
 class GameState(statemachine.AbstractState):
     def start(self, sm):
@@ -23,10 +41,16 @@ class GameState(statemachine.AbstractState):
         player_image = pyglet.image.load('player.png')
         self.player = Player(player_image, 2*32, 5*32)
 
+        self.monster = TinyMonster(player_image, 2*32, 9*32)
+
     def stop(self):
         del( self.layer )
 
     def update(self, dt, keys):
+        self.monster.update(dt)
+        self.update_player(dt, keys)
+
+    def update_player(self, dt, keys):
         old_x = self.player.x
         old_y = self.player.y
 
@@ -38,16 +62,16 @@ class GameState(statemachine.AbstractState):
             self.player.translate( 0, dt * -PLAYER_SPEED)
         if keys[key.UP]:
             self.player.translate( 0, dt * PLAYER_SPEED)
-        for tile in self.layer.tiles:
-            if collision.check_collision(self.player, tile):
-                # player collided with a tile, so let's use the old position
-                self.player.x = old_x
-                self.player.y = old_y
-                break
+
+        if self.player.check_collision(self.layer.tiles):
+            # player collided with a tile, so let's use the old position
+            self.player.x = old_x
+            self.player.y = old_y
 
     def draw(self):
         # draw tilelayer
         self.layer.draw()
         self.player.draw()
+        self.monster.draw()
 
 
