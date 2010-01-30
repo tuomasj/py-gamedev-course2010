@@ -75,18 +75,25 @@ class GameState(statemachine.AbstractState):
         player_image = pyglet.image.load('player.png')
         self.player = Player(player_image, 2*32, 5*32)
 
-        self.monster = TinyMonster(player_image, 2*32, 9*32)
+#        self.monster = TinyMonster(player_image, 2*32, 9*32)
+        self.monsters = []
+        for i in range(5):
+            self.monsters.append( TinyMonster(player_image, 2*32, 9*32) )
 
     def stop(self):
         del( self.layer )
+        del( self.player )
+        del( self.monsters )
 
     def update(self, dt, keys):
-        self.monster.update(dt, self.layer.tiles)
+        for monster in self.monsters:
+            monster.update(dt, self.layer.tiles)
         self.update_player(dt, keys)
 
-        # check if monster collides with player
-        if collision.check_collision(self.player, self.monster):
-            self.sm.change_state( states.GameoverState() )
+        # check if monsters collides with player
+        for monster in self.monsters:
+            if collision.check_collision(self.player, monster):
+                self.sm.change_state( states.GameoverState() )
 
     def update_player(self, dt, keys):
         old_x = self.player.x
@@ -110,6 +117,7 @@ class GameState(statemachine.AbstractState):
         # draw tilelayer
         self.layer.draw()
         self.player.draw()
-        self.monster.draw()
+        for monster in self.monsters:
+            monster.draw()
 
 
