@@ -3,6 +3,7 @@
 import statemachine
 import pyglet
 from pyglet.window import key
+import game
 
 class StartGameState(statemachine.AbstractState):
     def start(self, statemachine):
@@ -23,7 +24,7 @@ class StartGameState(statemachine.AbstractState):
             return
 
         if not keys[key.SPACE] and self.key_pressed:
-            self.statemachine.change_state( GameoverState() )
+            self.statemachine.change_state( game.GameState() )
 
     def draw(self):
         self.label.draw()

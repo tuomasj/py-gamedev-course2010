@@ -7,6 +7,8 @@ import collision
 from pyglet.window import key
 import random
 
+import states
+
 PLAYER_SPEED = 70.0
 
 class Player(pyglet.sprite.Sprite):
@@ -62,6 +64,10 @@ class TinyMonster(Player):
 
 class GameState(statemachine.AbstractState):
     def start(self, sm):
+
+        # put statemachine into class-variable for later use
+        self.sm = sm
+
         # init tilelayer
         self.layer = tilelayer.TileLayer(   'level1_20x15.map', 20, 15,
                                             'tiles.png', 32, 32)
@@ -77,6 +83,10 @@ class GameState(statemachine.AbstractState):
     def update(self, dt, keys):
         self.monster.update(dt, self.layer.tiles)
         self.update_player(dt, keys)
+
+        # check if monster collides with player
+        if collision.check_collision(self.player, self.monster):
+            self.sm.change_state( states.GameoverState() )
 
     def update_player(self, dt, keys):
         old_x = self.player.x
