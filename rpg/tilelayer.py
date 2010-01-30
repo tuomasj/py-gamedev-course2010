@@ -36,11 +36,13 @@ class TileLayer():
         # generate sprites for each tile
         for y in range(map_height):
             for x in range(map_width):
-                # compensate flipped y-coordinate and get tile index
-                tile = max_tiles - self.map[ y * map_width + x]
-                # create sprite using one of the tile sequence images
-                sprite = pyglet.sprite.Sprite( tile_sequence[tile], 1.0 * x * self.tile_width, 1.0 * y * self.tile_height)
-                self.tiles.append( sprite )
+                tile = self.map[ y * map_width + x]
+                # if tile is 0 (black), let's skip it
+                if tile != 0:
+                    # create sprite using one of the tile sequence images
+                    # compensate flipped y-axis in tile index
+                    sprite = pyglet.sprite.Sprite( tile_sequence[max_tiles-tile], 1.0 * x * self.tile_width, 1.0 * y * self.tile_height)
+                    self.tiles.append( sprite )
         self.set_position(0,0)
 
     def draw(self):
@@ -48,11 +50,19 @@ class TileLayer():
             tile.draw()
 
     def set_position(self, pos_x, pos_y):
+        tile_index = 0
         for y in range(self.map_height):
             for x in range(self.map_width):
-                tile = self.tiles[y * self.map_width + x]
+                index = y * self.map_width + x
+                # if tile is empty, skip it
+                if self.map[ index ] == 0:
+                    continue
+                # set new position for sprite using separate index
+                tile = self.tiles[ tile_index ]
                 tile.x = 1.0 * x * self.tile_width + float(pos_x)
                 tile.y = 1.0 * y * self.tile_height + float(pos_y)
+                # increment the index which is used for tiles
+                tile_index += 1
 
     def translate(self, dx, dy):
         for tile in self.tiles:
