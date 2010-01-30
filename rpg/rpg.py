@@ -2,6 +2,7 @@
 import pyglet
 import statemachine
 import states
+import game
 
 window = pyglet.window.Window()
 
@@ -9,7 +10,9 @@ keys = pyglet.window.key.KeyStateHandler()
 window.push_handlers(keys)
 
 sm = statemachine.StateMachine()
-sm.push( states.StartGameState() )
+
+# initial state
+sm.push( game.GameState() )
 
 @window.event
 def on_draw():
