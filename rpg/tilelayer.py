@@ -5,6 +5,10 @@ class TileLayer():
     def __init__(self, map_filename, map_width, map_height,
                  tile_filename, tile_width, tile_height):
 
+        self.map_width = map_width
+        self.map_height = map_height
+        self.tile_width = tile_width
+        self.tile_height = tile_height
         # generate datas structure
         self.map = []
         self.tiles = []
@@ -35,12 +39,25 @@ class TileLayer():
                 # compensate flipped y-coordinate and get tile index
                 tile = max_tiles - self.map[ y * map_width + x]
                 # create sprite using one of the tile sequence images
-                sprite = pyglet.sprite.Sprite( tile_sequence[tile], x*32, y*32)
+                sprite = pyglet.sprite.Sprite( tile_sequence[tile], x * self.tile_width, y * self.tile_height)
                 self.tiles.append( sprite )
 
     def draw(self):
         for tile in self.tiles:
             tile.draw()
+
+    def set_position(self, pos_x, pos_y):
+        for y in range(self.map_height):
+            for x in range(self.map_width):
+                tile = self.tiles[y * map_width + x]
+                tile.x = x * self.tile_width + pos_x
+                tile.y = y * self.tile_height + pos_y
+
+    def translate(self, dx, dy):
+        for tile in self.tiles:
+            tile.x += dx
+            tile.y += dy
+
 
 
 
