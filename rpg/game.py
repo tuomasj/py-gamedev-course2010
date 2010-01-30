@@ -72,13 +72,18 @@ class GameState(statemachine.AbstractState):
         self.layer = tilelayer.TileLayer(   'level1_20x15.map', 20, 15,
                                             'tiles.png', 32, 32)
 
+        # init level goal
+        goal_image = pyglet.image.load('goal.png')
+        self.goal = pyglet.sprite.Sprite(goal_image, 18*32, 7*32)
+
+        # init player
         player_image = pyglet.image.load('player.png')
         self.player = Player(player_image, 2*32, 5*32)
 
 #        self.monster = TinyMonster(player_image, 2*32, 9*32)
         self.monsters = []
         for i in range(5):
-            self.monsters.append( TinyMonster(player_image, 2*32, 9*32) )
+            self.monsters.append( TinyMonster(player_image, 18*32, 7*32) )
 
     def stop(self):
         del( self.layer )
@@ -94,6 +99,10 @@ class GameState(statemachine.AbstractState):
         for monster in self.monsters:
             if collision.check_collision(self.player, monster):
                 self.sm.change_state( states.GameoverState() )
+
+        # is level end reached?
+        if collision.check_collision(self.player, self.goal):
+            self.sm.change_state( game.LevelCompletedState() )
 
     def update_player(self, dt, keys):
         old_x = self.player.x
@@ -116,6 +125,7 @@ class GameState(statemachine.AbstractState):
     def draw(self):
         # draw tilelayer
         self.layer.draw()
+        self.goal.draw()
         self.player.draw()
         for monster in self.monsters:
             monster.draw()
